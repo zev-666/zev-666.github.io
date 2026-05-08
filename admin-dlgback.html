@@ -1,286 +1,769 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DLG BET 後台管理</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold: #C9A84C;
-    --gold-dark: #8B6914;
-    --black: #060608;
-    --black2: #0e0e12;
-    --text: #f0e6c8;
-    --text-dim: #a08050;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--black);font-family:'Raleway',sans-serif;color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
-  .container{max-width:500px;width:100%;padding:20px;}
-  .card{background:var(--black2);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:32px 24px;}
-  h2{font-family:'Cinzel',serif;color:var(--gold);text-align:center;letter-spacing:0.1em;margin-bottom:24px;font-size:1.4rem;}
-  input,textarea,select{width:100%;padding:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:var(--text);font-family:'Raleway',sans-serif;font-size:0.9rem;margin-bottom:15px;outline:none;}
-  input:focus,textarea:focus,select:focus{border-color:var(--gold);}
-  label{display:block;font-size:0.75rem;color:var(--text-dim);margin-bottom:4px;letter-spacing:0.05em;text-transform:uppercase;}
-  .btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;color:#0a0a0a;background:linear-gradient(135deg,var(--gold-dark),var(--gold));margin-top:8px;}
-  .btn:hover{box-shadow:0 8px 24px rgba(201,168,76,0.35);}
-  .btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
-  .btn-outline:hover{background:rgba(201,168,76,0.1);}
-  .error{color:#ff6b6b;font-size:0.78rem;text-align:center;display:none;margin-top:10px;}
-  .section-title{font-family:'Cinzel',serif;color:var(--gold);font-size:0.9rem;margin:24px 0 12px;border-bottom:1px solid rgba(201,168,76,0.2);padding-bottom:6px;}
-  .toggle-wrap{display:flex;align-items:center;gap:10px;margin-bottom:15px;}
-  .toggle{position:relative;width:36px;height:20px;}
-  .toggle input{display:none;}
-  .toggle-track{width:36px;height:20px;border-radius:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);transition:all 0.3s;position:relative;}
-  .toggle input:checked+.toggle-track{background:linear-gradient(90deg,var(--gold-dark),var(--gold));}
-  .toggle-track::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:white;transition:left 0.3s;}
-  .toggle input:checked+.toggle-track::after{left:18px;}
-  .link-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;border:1px solid rgba(201,168,76,0.1);}
-  .link-row .btn-sm{flex:0;width:auto;padding:6px 10px;font-size:0.7rem;margin:0;}
-  .btn-sm{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--text-dim);border-radius:6px;cursor:pointer;font-family:'Raleway',sans-serif;}
-  .btn-sm:hover{background:rgba(201,168,76,0.1);color:var(--gold);}
-  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:1000;}
-  .modal-box{background:var(--black2);border:1px solid var(--gold);border-radius:16px;padding:24px;max-width:600px;width:90%;}
-  .modal-text{background:#0a0a0a;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:12px;color:var(--text);font-family:monospace;font-size:0.75rem;max-height:300px;overflow:auto;white-space:pre-wrap;margin:12px 0;}
-  .close-modal{float:right;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>DLG Global - 后台管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #FFD700;
+      --gold-pale: #f0d080;
+      --gold-dark: #8B6914;
+      --black: #060608;
+      --black2: #0e0e12;
+      --black3: #16161c;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(201,168,76,0.25);
+      --text: #f0e6c8;
+      --text-dim: #a08050;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--black);
+      font-family: 'Raleway', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .bg-radial {
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .page { position: relative; z-index: 1; }
+    .hidden { display: none !important; }
+    /* 登入样式 */
+    #page-login {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      width: 100%; max-width: 380px;
+      background: var(--black2);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 48px 36px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.05);
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 3rem;
+    }
+    .login-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 0.1em;
+    }
+    .login-sub {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 32px;
+      letter-spacing: 0.05em;
+    }
+    .input-wrap { margin-bottom: 16px; }
+    .input-wrap input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+    .input-wrap input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.1);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+      background-size: 200% 100%;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #0a0a0a;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 8px 24px rgba(201,168,76,0.35);
+      transform: translateY(-1px);
+    }
+    .login-error {
+      color: #ff6b6b;
+      font-size: 0.78rem;
+      text-align: center;
+      margin-top: 12px;
+      display: none;
+    }
+    /* 后台样式 */
+    #page-admin { min-height: 100vh; display: flex; flex-direction: column; }
+    .admin-header {
+      background: var(--black2);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .admin-header-left { display: flex; align-items: center; gap: 12px; }
+    .admin-brand {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+    }
+    .admin-badge {
+      font-size: 0.62rem;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-sm {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-save {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: #0a0a0a;
+      font-weight: 700;
+    }
+    .btn-save:hover {
+      box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+      transform: translateY(-1px);
+    }
+    .btn-export {
+      background: rgba(80,200,80,0.1);
+      border: 1px solid rgba(80,200,80,0.3) !important;
+      color: #80ff80;
+    }
+    .btn-export:hover { background: rgba(80,200,80,0.2); }
+    .btn-logout {
+      background: rgba(255,80,80,0.1);
+      border: 1px solid rgba(255,80,80,0.25) !important;
+      color: #ff8080;
+    }
+    .btn-logout:hover { background: rgba(255,80,80,0.2); }
+    .admin-body {
+      flex: 1;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .admin-body { grid-template-columns: 1fr; }
+      .admin-header { flex-direction: column; gap: 12px; }
+    }
+    .admin-card {
+      background: var(--black2);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title svg { width: 16px; height: 16px; fill: var(--gold); opacity: 0.7; }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.86rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.08);
+    }
+    .form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    .form-select { background: rgba(20,18,14,0.8); cursor: pointer; }
+    .form-select option { background: var(--black2); }
+    .link-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .link-item:hover { border-color: rgba(201,168,76,0.25); }
+    .link-item-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .link-item-num {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      color: var(--gold-dark);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .link-item-actions { display: flex; gap: 6px; }
+    .icon-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      color: var(--text-dim);
+    }
+    .icon-btn:hover {
+      background: rgba(201,168,76,0.12);
+      border-color: rgba(201,168,76,0.3);
+      color: var(--gold);
+    }
+    .icon-btn.del:hover {
+      background: rgba(255,80,80,0.12);
+      border-color: rgba(255,80,80,0.3);
+      color: #ff8080;
+    }
+    .icon-btn svg { width: 13px; height: 13px; fill: currentColor; }
+    .link-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 480px) { .link-row { grid-template-columns: 1fr; } }
+    .add-link-btn {
+      width: 100%;
+      padding: 12px;
+      background: rgba(201,168,76,0.06);
+      border: 1px dashed rgba(201,168,76,0.25);
+      border-radius: 10px;
+      color: var(--text-dim);
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    .add-link-btn:hover {
+      background: rgba(201,168,76,0.12);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .add-link-btn svg { width: 14px; height: 14px; fill: currentColor; }
+    .toggle { position: relative; width: 36px; height: 20px; cursor: pointer; }
+    .toggle input { display: none; }
+    .toggle-track {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .toggle input:checked + .toggle-track {
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+      border-color: var(--gold);
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: white;
+      transition: left 0.3s;
+    }
+    .toggle input:checked + .toggle-track::after { left: 18px; }
+    .toggle-label { font-size: 0.75rem; color: var(--text-dim); }
+    .pwd-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 480px) { .pwd-row { grid-template-columns: 1fr; } }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .stat-box {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 10px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .stat-lbl {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 2px;
+    }
+    .logo-upload-area {
+      border: 2px dashed rgba(201,168,76,0.25);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .logo-upload-area:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.04);
+    }
+    .logo-upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .logo-preview {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 8px;
+      overflow: hidden;
+      background: var(--black3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .logo-upload-hint { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* Toast 提示 */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      z-index: 9999;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+    .toast.success {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: #0a0a0a;
+      box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+    }
+    .toast.info {
+      background: linear-gradient(135deg, #1a4a1a, #2a7a2a);
+      color: #80ff80;
+      box-shadow: 0 8px 30px rgba(80,200,80,0.3);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* 导出弹窗 */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--black2);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1rem;
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+    .modal-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .modal-code {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #aaffaa;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  </style>
 </head>
 <body>
-<div id="login-screen" class="container">
-  <div class="card">
-    <h2>🔒 後台管理</h2>
-    <input type="password" id="pwd-input" placeholder="請輸入管理員密碼">
-    <button class="btn" onclick="login()">進入後台</button>
-    <div class="error" id="login-error">❌ 密碼錯誤</div>
-  </div>
-</div>
+  <div class="bg-radial"></div>
+  <div class="toast" id="toast"></div>
 
-<div id="admin-screen" class="container" style="display:none;">
-  <div class="card">
-    <h2>✏️ 編輯前台內容</h2>
-
-    <!-- 個人資料 -->
-    <div class="section-title">個人資料</div>
-    <label>Logo 圖片（貼上網址或上傳）</label>
-    <input type="text" id="logo-url" placeholder="https://example.com/logo.png 或留空使用預設">
-    <input type="file" id="logo-file" accept="image/*" style="margin-top:-10px;" onchange="uploadLogo()">
-    <label>顯示名稱</label>
-    <input type="text" id="username" placeholder="luckyDLGbet">
-    <label>個人簡介（換行請用 \n）</label>
-    <textarea id="bio" rows="3" placeholder="第一行\n第二行"></textarea>
-    <label>頁尾文字</label>
-    <input type="text" id="footer" placeholder="18+ · 請適度遊戲">
-
-    <!-- 社群圖示 -->
-    <div class="section-title">社群圖示（最多 6 個）</div>
-    <div id="socials-container"></div>
-    <button class="btn-outline btn" onclick="addSocial()" style="margin-bottom:16px;">+ 新增社群</button>
-
-    <!-- 連結按鈕 -->
-    <div class="section-title">連結按鈕（最多 8 個）</div>
-    <div id="links-container"></div>
-    <button class="btn-outline btn" onclick="addLink()" style="margin-bottom:16px;">+ 新增按鈕</button>
-
-    <!-- 操作按鈕 -->
-    <button class="btn" onclick="saveLocal()">💾 儲存到本機（僅自己預覽）</button>
-    <button class="btn" onclick="exportData()" style="margin-top:6px;">📤 匯出更新資料（複製貼到 index.html）</button>
-  </div>
-</div>
-
-<!-- 匯出彈窗 -->
-<div id="export-modal" class="modal" style="display:none;">
-  <div class="modal-box">
-    <button class="close-modal" onclick="closeModal()">&times;</button>
-    <h3 style="color:var(--gold);font-family:'Cinzel',serif;">📋 複製以下程式碼</h3>
-    <p style="font-size:0.8rem;color:var(--text-dim);margin-bottom:8px;">打開 index.html，找到 <code>const DEFAULT_DATA = { ... };</code>，用下面的內容完全取代那一段（從 <code>{</code> 到 <code>};</code>）</p>
-    <div class="modal-text" id="export-text"></div>
-    <button class="btn" onclick="copyExport()">📋 複製到剪貼簿</button>
-    <p style="color:var(--gold);font-size:0.7rem;margin-top:8px;">複製後重新上傳 index.html 到 GitHub，所有訪客就能看到更新！</p>
-  </div>
-</div>
-
-<script>
-// ========== 預設設定 ==========
-const DEFAULT_PASSWORD = 'dlgbet2024'; // 可在這裡直接改後台密碼
-
-const DEFAULT_DATA = {
-  username: 'luckyDLGbet',
-  bio: '🎯 每日投注策略及訊號📋\\n每晚8點直播 💎 加入我們的免費社群↓',
-  footer: '18+ · 娛樂用途 · 請適度遊戲 · Gamble Responsibly',
-  logoData: null,
-  socials: [
-    { type: 'instagram', url: 'https://instagram.com/' },
-    { type: 'x', url: 'https://x.com/' },
-    { type: 'tiktok', url: 'https://tiktok.com/' }
-  ],
-  links: [
-    { label: 'Instagram', url: 'https://instagram.com/', icon: 'instagram', featured: false },
-    { label: 'X (Twitter)', url: 'https://x.com/', icon: 'x', featured: false },
-    { label: 'TikTok', url: 'https://tiktok.com/', icon: 'tiktok', featured: false },
-    { label: '加入 Discord 社群', url: 'https://discord.gg/', icon: 'discord', featured: true },
-    { label: '加入 Telegram 頻道', url: 'https://t.me/', icon: 'telegram', featured: true },
-    { label: '立即註冊 DLG BET 🎰', url: '#', icon: 'bet', featured: true }
-  ]
-};
-
-// 讀取本機儲存，若無則用預設
-let data = JSON.parse(localStorage.getItem('dlgbet_admin_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
-
-// ========== 登入 ==========
-function login(){
-  if(document.getElementById('pwd-input').value === DEFAULT_PASSWORD){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('admin-screen').style.display='block';
-    renderAdmin();
-  }else{
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('pwd-input').value='';
-  }
-}
-document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
-
-// ========== 渲染後台 ==========
-function renderAdmin(){
-  document.getElementById('username').value = data.username;
-  document.getElementById('bio').value = data.bio.replace(/\\n/g,'\n');
-  document.getElementById('footer').value = data.footer;
-  document.getElementById('logo-url').value = data.logoData || '';
-
-  renderSocials();
-  renderLinks();
-}
-
-function renderSocials(){
-  const container = document.getElementById('socials-container');
-  container.innerHTML = '';
-  data.socials.forEach((s,i)=>{
-    const div = document.createElement('div');
-    div.className = 'link-row';
-    div.innerHTML = `
-      <select onchange="data.socials[${i}].type=this.value">
-        <option value="instagram" ${s.type==='instagram'?'selected':''}>Instagram</option>
-        <option value="x" ${s.type==='x'?'selected':''}>X (Twitter)</option>
-        <option value="tiktok" ${s.type==='tiktok'?'selected':''}>TikTok</option>
-        <option value="discord" ${s.type==='discord'?'selected':''}>Discord</option>
-        <option value="telegram" ${s.type==='telegram'?'selected':''}>Telegram</option>
-        <option value="youtube" ${s.type==='youtube'?'selected':''}>YouTube</option>
-        <option value="twitch" ${s.type==='twitch'?'selected':''}>Twitch</option>
-      </select>
-      <div style="display:flex;gap:4px;">
-        <input type="text" value="${s.url}" placeholder="https://..." oninput="data.socials[${i}].url=this.value" style="flex:1;">
-        <button class="btn-sm" onclick="deleteSocial(${i})">✕</button>
-      </div>`;
-    container.appendChild(div);
-  });
-}
-
-function renderLinks(){
-  const container = document.getElementById('links-container');
-  container.innerHTML = '';
-  data.links.forEach((link,i)=>{
-    const div = document.createElement('div');
-    div.style.background='rgba(255,255,255,0.03)';
-    div.style.border='1px solid rgba(201,168,76,0.1)';
-    div.style.borderRadius='8px';
-    div.style.padding='10px';
-    div.style.marginBottom='10px';
-    div.innerHTML = `
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <input type="text" value="${link.label}" placeholder="按鈕名稱" oninput="data.links[${i}].label=this.value" style="flex:1;">
-        <select onchange="data.links[${i}].icon=this.value">
-          <option value="instagram" ${link.icon==='instagram'?'selected':''}>Instagram</option>
-          <option value="x" ${link.icon==='x'?'selected':''}>X</option>
-          <option value="tiktok" ${link.icon==='tiktok'?'selected':''}>TikTok</option>
-          <option value="discord" ${link.icon==='discord'?'selected':''}>Discord</option>
-          <option value="telegram" ${link.icon==='telegram'?'selected':''}>Telegram</option>
-          <option value="youtube" ${link.icon==='youtube'?'selected':''}>YouTube</option>
-          <option value="twitch" ${link.icon==='twitch'?'selected':''}>Twitch</option>
-          <option value="bet" ${link.icon==='bet'?'selected':''}>Bet</option>
-          <option value="link" ${link.icon==='link'?'selected':''}>預設</option>
-        </select>
+  <!-- 导出弹窗 -->
+  <div class="modal-overlay hidden" id="export-modal">
+    <div class="modal-box">
+      <div class="modal-title">📤 导出资料 - 永久更新 index.html</div>
+      <div class="modal-desc">
+        复制下方代码，打开你的 <strong style="color:var(--gold)">index.html</strong>，找到 <code style="color:#aaffaa">const DEFAULT_DATA = {</code> 这一行，<strong>将整个 DEFAULT_DATA 区块替换</strong>成下方内容，再重新上传到 GitHub，所有访客就能看到更新。
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input type="text" value="${link.url}" placeholder="https://..." oninput="data.links[${i}].url=this.value" style="flex:2;">
-        <label class="toggle">
-          <input type="checkbox" ${link.featured?'checked':''} onchange="data.links[${i}].featured=this.checked">
-          <div class="toggle-track"></div>
-        </label>
-        <span style="font-size:0.7rem;color:var(--text-dim);">精選</span>
-        <button class="btn-sm" onclick="deleteLink(${i})" style="margin-left:auto;">✕</button>
-      </div>`;
-    container.appendChild(div);
-  });
-}
+      <div class="modal-code" id="export-code"></div>
+      <div class="modal-actions">
+        <button class="btn-sm btn-export" onclick="copyExport()">📋 复制代码</button>
+        <button class="btn-sm btn-logout" onclick="closeExport()">关闭</button>
+      </div>
+    </div>
+  </div>
 
-// 增刪項目
-function addSocial(){ if(data.socials.length<6){ data.socials.push({type:'instagram',url:'https://'}); renderSocials(); } }
-function deleteSocial(i){ data.socials.splice(i,1); renderSocials(); }
-function addLink(){ if(data.links.length<8){ data.links.push({label:'新按鈕',url:'https://',icon:'link',featured:false}); renderLinks(); } }
-function deleteLink(i){ data.links.splice(i,1); renderLinks(); }
+  <!-- 登入页面 -->
+  <div id="page-login" class="page">
+    <div class="login-card">
+      <div class="login-logo">👑</div>
+      <div class="login-title">ADMIN PANEL</div>
+      <div class="login-sub">DLG Global 后台管理系统</div>
+      <div class="input-wrap">
+        <input type="password" id="login-pwd" placeholder="请输入管理员密码" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" onclick="doLogin()">进入后台 →</button>
+      <div class="login-error" id="login-error">❌ 密码错误，请再试一次</div>
+    </div>
+  </div>
 
-// 上傳 Logo 轉 Base64
-function uploadLogo(){
-  const file = document.getElementById('logo-file').files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    data.logoData = e.target.result;
-    document.getElementById('logo-url').value = '[已上傳圖片]';
-  };
-  reader.readAsDataURL(file);
-}
+  <!-- 后台页面 -->
+  <div id="page-admin" class="page hidden">
+    <div class="admin-header">
+      <div class="admin-header-left">
+        <div class="admin-brand">DLG GLOBAL</div>
+        <div class="admin-badge">后台管理</div>
+      </div>
+      <div class="admin-actions">
+        <button class="btn-sm btn-save" onclick="saveAll()">💾 储存</button>
+        <button class="btn-sm btn-export" onclick="openExport()">📤 导出资料</button>
+        <button class="btn-sm btn-logout" onclick="doLogout()">登出</button>
+      </div>
+    </div>
 
-// 從 URL 載入
-document.getElementById('logo-url').addEventListener('input', function(){
-  const val = this.value.trim();
-  if(val.startsWith('http')) data.logoData = val;
-  else if(val === '') data.logoData = null;
-});
+    <div class="admin-body">
+      <!-- 左栏 -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="admin-card">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>统计概览</div>
+          <div class="stats-row">
+            <div class="stat-box"><div class="stat-num" id="stat-links">0</div><div class="stat-lbl">连结</div></div>
+            <div class="stat-box"><div class="stat-num" id="stat-socials">0</div><div class="stat-lbl">社群</div></div>
+            <div class="stat-box"><div class="stat-num">✦</div><div class="stat-lbl">上线中</div></div>
+          </div>
+        </div>
 
-// 從文字框更新其他欄位
-document.getElementById('username').addEventListener('input',e=>data.username=e.target.value);
-document.getElementById('bio').addEventListener('input',e=>data.bio=e.target.value.replace(/\n/g,'\\n'));
-document.getElementById('footer').addEventListener('input',e=>data.footer=e.target.value);
+        <div class="admin-card">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>个人资料</div>
+          <div class="form-group">
+            <label class="form-label">Logo 图片</label>
+            <div class="logo-upload-area">
+              <input type="file" accept="image/*" onchange="handleLogoUpload(event)">
+              <div class="logo-preview" id="logo-preview">🦁</div>
+              <div class="logo-upload-hint">点击上传图片（JPG/PNG）</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">显示名称</label>
+            <input type="text" class="form-input" id="admin-username" placeholder="例：DLG Global">
+          </div>
+          <div class="form-group">
+            <label class="form-label">个人简介（支援 Emoji，换行用 Enter）</label>
+            <textarea class="form-textarea" id="admin-bio" placeholder="输入简介..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">页尾文字</label>
+            <input type="text" class="form-input" id="admin-footer" placeholder="18+ · 请适度游戏">
+          </div>
+        </div>
 
-// 儲存到本機（即時預覽）
-function saveLocal(){
-  // 確保 bio 已更新
-  data.bio = document.getElementById('bio').value.replace(/\n/g,'\\n');
-  data.username = document.getElementById('username').value;
-  data.footer = document.getElementById('footer').value;
-  localStorage.setItem('dlgbet_admin_data', JSON.stringify(data));
-  alert('✅ 已儲存到本機！現在回到前台 https://zev-666.github.io/ 重新整理，您就會看到修改（只有您能看到）。');
-}
+        <div class="admin-card">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/></svg>修改密码</div>
+          <div class="pwd-row">
+            <div class="form-group"><label class="form-label">新密码</label><input type="password" class="form-input" id="new-pwd" placeholder="新密码"></div>
+            <div class="form-group"><label class="form-label">确认密码</label><input type="password" class="form-input" id="confirm-pwd" placeholder="再输入一次"></div>
+          </div>
+          <button class="btn-sm btn-save" style="width:100%;padding:11px" onclick="changePassword()">更新密码</button>
+        </div>
+      </div>
 
-// 匯出供 index.html 使用
-function exportData(){
-  // 同步最新資料
-  data.bio = document.getElementById('bio').value.replace(/\n/g,'\\n');
-  data.username = document.getElementById('username').value;
-  data.footer = document.getElementById('footer').value;
-  const exportObj = {
-    username: data.username,
-    bio: data.bio,
-    footer: data.footer,
-    logoData: data.logoData,
-    socials: data.socials,
-    links: data.links
-  };
-  const text = 'const DEFAULT_DATA = ' + JSON.stringify(exportObj, null, 2) + ';';
-  document.getElementById('export-text').textContent = text;
-  document.getElementById('export-modal').style.display = 'flex';
-}
+      <!-- 右栏 -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="admin-card">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>社群图示</div>
+          <div id="admin-socials-wrap"></div>
+          <button class="add-link-btn" onclick="addSocial()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>新增社群图示</button>
+        </div>
 
-function closeModal(){
-  document.getElementById('export-modal').style.display = 'none';
-}
+        <div class="admin-card">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>连结按钮</div>
+          <div id="admin-links-wrap"></div>
+          <button class="add-link-btn" onclick="addLink()" style="margin-top:10px"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>新增连结</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-function copyExport(){
-  const text = document.getElementById('export-text').textContent;
-  navigator.clipboard.writeText(text).then(()=>alert('✅ 已複製！請貼到 index.html 的 DEFAULT_DATA 位置並重新上傳。'));
-}
+  <script>
+    // ==================== 数据存储 ====================
+    const STORAGE_KEY = 'dlgbet_data';
+    const PASS_KEY = 'dlgbet_pass';
+    const DEFAULT_PASS = 'heaven0412';
 
-// ========== 初始化 ==========
-</script>
+    const DEFAULT_DATA = {
+      username: 'DLG Global',
+      bio: '🎯 Daily Betting Strategy & Signals\n📊 Live Session Every Night 8PM\n💎 Join our FREE Community ↓\n🎯每日投注策略与信号\n📊每晚 8 点直播带牌',
+      footer: '18+ · 娱乐用途 · 请适度游戏 · Gamble Responsibly',
+      logoData: null,
+      socials: [
+        { type: 'instagram', url: 'https://www.instagram.com/dlgbet_global?igsh=MXBiamMxMnB1OWFzbQ%3D%3D&utm_source=qr' },
+        { type: 'x', url: 'https://x.com/dlgbet_global?s=21&t=Y-i-o052t5myt8o8HzlO_A' },
+        { type: 'tiktok', url: 'https://www.tiktok.com/@dlgbet_global?_r=1&_t=ZS-96BS8FXHSvk' },
+        { type: 'discord', url: 'https://discord.gg/yUNP8g7haC' },
+        { type: 'telegram', url: 'https://t.me/onlinecasinobetdlg' }
+      ],
+      links: [
+        { label: 'Instagram', url: 'https://www.instagram.com/dlgbet_global?igsh=MXBiamMxMnB1OWFzbQ%3D%3D&utm_source=qr', icon: 'instagram', featured: false },
+        { label: 'X (Twitter)', url: 'https://x.com/dlgbet_global?s=21&t=Y-i-o052t5myt8o8HzlO_A', icon: 'x', featured: false },
+        { label: 'TikTok', url: 'https://www.tiktok.com/@dlgbet_global?_r=1&_t=ZS-96BS8FXHSvk', icon: 'tiktok', featured: false },
+        { label: '加入 Discord 社群', url: 'https://discord.gg/yUNP8g7haC', icon: 'discord', featured: true },
+        { label: '加入 Telegram 频道', url: 'https://t.me/onlinecasinobetdlg', icon: 'telegram', featured: true },
+        { label: '立即注册 DLG BET 🎰', url: 'https://dlgbet.com?code=dlgglobal888', icon: 'bet', featured: true }
+      ]
+    };
+
+    const ICONS = {
+      instagram: `<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
+      x: `<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>`,
+      tiktok: `<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>`,
+      discord: `<svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.1.12 18.14.149 18.17a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>`,
+      telegram: `<svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`,
+      bet: `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>`,
+      link: `<svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>`
+    };
+
+    function gi(t) { return ICONS[t] || ICONS.link; }
+    function getPass() { return localStorage.getItem(PASS_KEY) || DEFAULT_PASS; }
+    function loadData() {
+      try {
+        const s = localStorage.getItem(STORAGE_KEY);
+        if (s) return { ...DEFAULT_DATA, ...JSON.parse(s) };
+      } catch(e) {}
+      return { ...DEFAULT_DATA };
+    }
+    function saveDataStore(d) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(e) {}
+    }
+
+    let DATA = loadData();
+
+    // ==================== 登入/登出 ====================
+    function doLogin() {
+      const p = document.getElementById('login-pwd').value;
+      if (p === getPass()) {
+        document.getElementById('login-error').style.display = 'none';
+        document.getElementById('login-pwd').value = '';
+        document.getElementById('page-login').classList.add('hidden');
+        document.getElementById('page-admin').classList.remove('hidden');
+        renderAdmin();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+        document.getElementById('login-pwd').value = '';
+      }
+    }
+    function doLogout() {
+      document.getElementById('page-admin').classList.add('hidden');
+      document.getElementById('page-login').classList.remove('hidden');
+    }
+    document.getElementById('login-pwd').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // ==================== 渲染后台 ====================
+    function renderAdmin() {
+      document.getElementById('admin-username').value = DATA.username || '';
+      document.getElementById('admin-bio').value = DATA.bio || '';
+      document.getElementById('admin-footer').value = DATA.footer || '';
+      document.getElementById('stat-links').textContent = (DATA.links || []).length;
+      document.getElementById('stat-socials').textContent = (DATA.socials || []).length;
+      if (DATA.logoData) {
+        const lp = document.getElementById('logo-preview');
+        lp.innerHTML = `<img src="${DATA.logoData}">`;
+      }
+      renderAdminSocials();
+      renderAdminLinks();
+    }
+
+    function renderAdminSocials() {
+      const w = document.getElementById('admin-socials-wrap');
+      w.innerHTML = '';
+      (DATA.socials || []).forEach(function(s, i) {
+        const d = document.createElement('div');
+        d.className = 'link-item';
+        d.innerHTML = `<div class="link-item-header"><span class="link-item-num">社群 #${i+1}</span><div class="link-item-actions"><button class="icon-btn del" onclick="deleteSocial(${i})"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button></div></div><div class="link-row"><div class="form-group" style="margin:0"><label class="form-label">平台</label><select class="form-select" onchange="updateSocial(${i},'type',this.value)">${['instagram','x','tiktok','discord','telegram'].map(function(t){return `<option value="${t}"${s.type===t?' selected':''}>${t}</option>`}).join('')}</select></div><div class="form-group" style="margin:0"><label class="form-label">URL</label><input type="text" class="form-input" value="${s.url||''}" placeholder="https://..." oninput="updateSocial(${i},'url',this.value)"></div></div>`;
+        w.appendChild(d);
+      });
+    }
+
+    function renderAdminLinks() {
+      const w = document.getElementById('admin-links-wrap');
+      w.innerHTML = '';
+      (DATA.links || []).forEach(function(link, i) {
+        const d = document.createElement('div');
+        d.className = 'link-item';
+        d.innerHTML = `<div class="link-item-header"><span class="link-item-num">按钮 #${i+1}</span><div class="link-item-actions"><button class="icon-btn" onclick="moveLink(${i},-1)"><svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg></button><button class="icon-btn" onclick="moveLink(${i},1)"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button><button class="icon-btn del" onclick="deleteLink(${i})"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button></div></div><div class="link-row"><div class="form-group" style="margin:0"><label class="form-label">按钮名称</label><input type="text" class="form-input" value="${link.label||''}" oninput="updateLink(${i},'label',this.value)"></div><div class="form-group" style="margin:0"><label class="form-label">图示</label><select class="form-select" onchange="updateLink(${i},'icon',this.value)">${Object.keys(ICONS).map(function(t){return `<option value="${t}"${link.icon===t?' selected':''}>${t}</option>`}).join('')}</select></div></div><div class="form-group" style="margin:8px 0 0"><label class="form-label">连结 URL</label><input type="text" class="form-input" value="${link.url||''}" oninput="updateLink(${i},'url',this.value)"></div><div style="margin-top:10px;display:flex;align-items:center;gap:12px"><label class="toggle"><input type="checkbox"${link.featured?' checked':''} onchange="updateLink(${i},'featured',this.checked)"><div class="toggle-track"></div></label><span class="toggle-label">精选按钮（金色）</span></div>`;
+        w.appendChild(d);
+      });
+    }
+
+    // ==================== 数据操作 ====================
+    function updateLink(i, k, v) { DATA.links[i][k] = v; }
+    function updateSocial(i, k, v) { DATA.socials[i][k] = v; }
+    function addLink() {
+      DATA.links.push({ label: '新按钮', url: 'https://', icon: 'link', featured: false });
+      renderAdminLinks();
+      document.getElementById('stat-links').textContent = DATA.links.length;
+    }
+    function deleteLink(i) {
+      DATA.links.splice(i, 1);
+      renderAdminLinks();
+      document.getElementById('stat-links').textContent = DATA.links.length;
+    }
+    function moveLink(i, dir) {
+      const j = i + dir;
+      if (j < 0 || j >= DATA.links.length) return;
+      [DATA.links[i], DATA.links[j]] = [DATA.links[j], DATA.links[i]];
+      renderAdminLinks();
+    }
+    function addSocial() {
+      DATA.socials.push({ type: 'instagram', url: 'https://' });
+      renderAdminSocials();
+      document.getElementById('stat-socials').textContent = DATA.socials.length;
+    }
+    function deleteSocial(i) {
+      DATA.socials.splice(i, 1);
+      renderAdminSocials();
+      document.getElementById('stat-socials').textContent = DATA.socials.length;
+    }
+
+    // ==================== 保存 ====================
+    function saveAll() {
+      DATA.username = document.getElementById('admin-username').value;
+      DATA.bio = document.getElementById('admin-bio').value;
+      DATA.footer = document.getElementById('admin-footer').value;
+      saveDataStore(DATA);
+      showToast('✦ 储存成功！即时生效', 'success');
+    }
+
+    // ==================== 修改密码 ====================
+    function changePassword() {
+      const np = document.getElementById('new-pwd').value;
+      const cp = document.getElementById('confirm-pwd').value;
+      if (!np) return showToast('⚠️ 请输入新密码', 'success');
+      if (np !== cp) return showToast('⚠️ 两次密码不一致', 'success');
+      localStorage.setItem(PASS_KEY, np);
+      document.getElementById('new-pwd').value = '';
+      document.getElementById('confirm-pwd').value = '';
+      showToast('✦ 密码已更新', 'success');
+    }
+
+    // ==================== Logo 上传 ====================
+    function handleLogoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = function(ev) {
+        DATA.logoData = ev.target.result;
+        const lp = document.getElementById('logo-preview');
+        lp.innerHTML = `<img src="${ev.target.result}">`;
+      };
+      r.readAsDataURL(file);
+    }
+
+    // ==================== Toast 提示 ====================
+    function showToast(msg, type) {
+      type = type || 'success';
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type + ' show';
+      setTimeout(function() { t.classList.remove('show'); }, 2800);
+    }
+
+    // ==================== 导出资料 ====================
+    function openExport() {
+      const exportData = { ...DATA };
+      const json = JSON.stringify(exportData, null, 2);
+      const code = `const DEFAULT_DATA = ${json};`;
+      document.getElementById('export-code').textContent = code;
+      document.getElementById('export-modal').classList.remove('hidden');
+    }
+    function closeExport() {
+      document.getElementById('export-modal').classList.add('hidden');
+    }
+    function copyExport() {
+      const code = document.getElementById('export-code').textContent;
+      navigator.clipboard.writeText(code).then(function() {
+        showToast('✦ 已复制！贴到 index.html 后重新上传', 'info');
+      });
+    }
+  </script>
 </body>
 </html>
